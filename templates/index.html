@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Abel's Blog - A place of what?</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <style>
+            body,html {
+                background-color: aliceblue;
+                font-family: 'Poppins', sans-serif;
+            }
+            .box {
+                box-shadow: none;
+                border: 1px solid grey;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+        </style>
+        <script>
+            function deletePost(id) {
+                $.ajax({
+                    data: {},
+                    type: 'POST',
+                    url: '/delete/' + id
+                }).done(function(data) {
+                    if (data.error) {
+                        $('#delete-notification').text(data.error).show()
+                    } else {
+                        $('#delete-'+id).hide()
+                    }
+                })
+
+            }
+        </script>
+    </head>
+    <body>
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='logo.png') }}" height="28">
+              </a>
+          
+              <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="true" data-target="navbarBasicExample">
+                <span aria-hidden="false"></span>
+                <span aria-hidden="false"></span>
+                <span aria-hidden="false"></span>
+              </a>
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+              <div class="navbar-start">
+                <a class="navbar-item">
+                  What?
+                </a>
+          
+                <a class="navbar-item">
+                  About Me
+                </a>
+              </div>
+          
+              <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        {% if login %}
+                            <a class="button is-primary" href="{{ url_for('post') }}">
+                            <strong>Post</strong>
+                            </a>
+                        {% endif %}
+                        <a class="button is-light" href="{{ url_for('login') }}">
+                            Admin
+                        </a>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </nav>
+        <section class="section">
+            <div class="container">
+                <h1 class="title">Abel's Blog</h1>
+                <h1 class="subtitle">A quick and dirty blog for my life 'n' stuff! Site made by Abel, for Abel.</h1>
+                <div class="notification is-danger" id="delete-notification" style="display: none;">
+                    <button class="delete"></button>
+                    Primar lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit lorem ipsum dolor. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Sit amet,
+                    consectetur adipiscing elit
+                </div>
+                <div class="container is-flex-mobile" style="width:95%; margin-top: 60px;">
+                    <div class="columns">
+                        <div class="column is-three-fifths">
+                            <h1 class="title" style="margin-bottom: .95rem;"><i>Posts</i></h1>
+                            {% for post in posts %}
+                                <div class="box" id="delete-{{ post['id'] }}">
+                                    <article class="media">
+                                        <div class="media-content">
+                                            <div class="content">
+                                                <h1 class="title is-4">{{ post['title'] }}</h1>
+                                                <p class="subtitle is-6" style="color: brown;">Posted by Abel Diress on {{ post['date'] }} at {{ post['time'] }}</p>
+                                                <hr style="margin-top: 0;">
+                                                <p style="margin-bottom: 7px;">
+                                                    {{ post['body'] }}
+                                                </p>
+                                            </div>
+                                            <nav class="level is-mobile">
+                                                <div class="level-left">
+                                                    {% if login %}
+                                                        <a class="button is-danger" onclick="deletePost('{{ post['id'] }}');" style="margin-right: 10px;">Delete</a>
+                                                    {% endif %}
+                                                    <a class="level-item">
+                                                    <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                                                    </a>
+                                                </div>
+                                            </nav>
+                                        </div>
+                                    </article>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="column is-hidden-mobile">
+                            <h1 class="title is-4"><i>Extra stuff</i></h1>
+                            <div class="box">
+                                <div class="content">
+                                    <h1 class="title is-3">Ground Rules</h1>
+                                    <p class="subtitle is-5">Here are some basic rules that I shall enforce on myself</p>
+                                    <ol style="margin-left: 25px;">
+                                        <li>
+                                            Don't be controversial
+                                            <br>
+                                            <small>Just don't, there's already enough controversy</small>
+                                        </li>
+                                        <li>
+                                            Keep it simple
+                                            <br>
+                                            <small>Going too deep is boooring</small>
+                                        </li>
+                                        <li>
+                                            Use fake names when addressing someone
+                                            <br>
+                                            <small>People think privacy is still a thing, so I don't want to get sued</small>
+                                        </li>
+                                        <li>
+                                            NO racism, bigotry, or hate speech
+                                            <br>
+                                            <small>Don't think this one needs explaining</small>
+                                        </li>
+                                        <li>
+                                            Don't be too personal
+                                            <br>
+                                            <small>I think we can all benefit from this one lol</small>
+                                        </li>
+                                        <li>
+                                            Forget some of these rules (except 4)
+                                            <br>
+                                            <small>Rules are made to be broken, especially those made by you</small>
+                                        </li>
+                                    </ol>
+                                    <p style="color: brown;">Anyway, hope you enjoy the two of you still on this site!</p>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <h1 class="title is-4">Somehow intrested?</h1>
+                                <p class="subtitle is-6">If, somehow, you want to read more of this, put your email address to receive notifications when I post (if i ever)</p>
+                                <form method="POST">
+                                    <input class="input is-info" type="text" placeholder="Gimme your soul..." disabled>
+                                    <input class="button is-info" type="submit" style="margin-top: 1.5rem;" disabled>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

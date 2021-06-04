@@ -32,7 +32,7 @@ def index():
 @app.route('/admin-login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        if request.form['pwd'] == 'AbelDiress@secure.9928025668':
+        if request.form['pwd'] == '<REDACTED>':
             resp = make_response(render_template('login.html', login=login))
             resp.set_cookie('userID', request.form['pwd'])
             
